@@ -26,7 +26,13 @@ function startGame() {
     let board = boardCreate();
     console.log(board.getBoard());
 
+    const getBoard = () => console.log(board.getBoard());
+
+    const playRound = (row, col) => {
+        board.handleMove(row, col);
+    }
 
 
+    return { playRound, getBoard }
 }
 
