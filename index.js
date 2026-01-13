@@ -11,8 +11,8 @@ function boardCreate() {
 
     const getBoard = () => gameBoard;
 
-    const handleMove = (row, col) => {
-        gameBoard[row][col] = 1;
+    const handleMove = (row, col, player) => {
+        gameBoard[row][col] = player;
         console.log(gameBoard);
     }
 
@@ -45,17 +45,49 @@ function startGame() {
         activePlayer == players[0] ? activePlayer = players[1] : activePlayer = players[0];
     };
 
+    console.log(`Player ${activePlayer.name}'s turn`);
 
     const getBoard = () => console.log(board.getBoard());
 
-    const playRound = (row, col) => {
-        console.log(`${activePlayer.name} marks ${row, col}`);
+    const checkWin = (row, col) => {
+        let rowLine = board.getBoard();
 
-        board.handleMove(row, col);
+        if (rowLine[row][0] == rowLine[row][1] || rowLine[row][0] == rowLine[row][2]) {
+            return activePlayer;
+        } else if (rowLine[0][col] == rowLine[1][col] || rowLine[0][col] == rowLine[2][col]) {
+            return activePlayer;
+        } else if (rowLine[0][0] == rowLine[1][1] || rowLine[0][0] == rowLine[2][2]) {
+            return activePlayer;
+        } else if (rowLine[0][2] == rowLine[1][1] || rowLine[0][2] == rowLine[2][0]) {
+            return activePlayer;
+        }
+    }
+
+    const playRound = (row, col) => {
+
+        if (!board.getBoard()[row][col]) {
+            console.log(`${activePlayer.name} marks ${row} ${col}`);
+
+            board.handleMove(row, col, activePlayer.token);
+
+            if (counter > 4 && checkWin()) {
+                let winner = checkWin();
+                //TBD winner is determined here
+            }
+
+            swtich();
+            console.log(`Player ${activePlayer.name}'s turn:`);
+        } else {
+            console.log("Error! Already taken!");
+            console.log(`Player ${activePlayer.name}'s turn:`);
+        }
 
     }
 
 
     return { playRound, getBoard }
 }
+
+let a = startGame();
+
 
