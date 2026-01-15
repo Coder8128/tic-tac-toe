@@ -25,16 +25,17 @@ function boardCreate() {
 function startGame() {
     //Create an isntance of a boardCreate(), meaning new board creation
     let board = boardCreate();
+    let winner;
     console.log(board.getBoard());
 
     //Create the two players
     const players = [
         {
-            name: "One",
+            name: "Player One",
             token: 1
         },
         {
-            name: "Two",
+            name: "Player Two",
             token: 2
         }
     ];
@@ -45,6 +46,7 @@ function startGame() {
         activePlayer == players[0] ? activePlayer = players[1] : activePlayer = players[0];
     };
 
+
     console.log(`Player ${activePlayer.name}'s turn`);
 
     const getBoard = () => console.log(board.getBoard());
@@ -53,26 +55,35 @@ function startGame() {
         let rowLine = board.getBoard();
 
         if (rowLine[row][0] == rowLine[row][1] || rowLine[row][0] == rowLine[row][2]) {
-            return activePlayer;
+            return activePlayer.name;
         } else if (rowLine[0][col] == rowLine[1][col] || rowLine[0][col] == rowLine[2][col]) {
-            return activePlayer;
+            return activePlayer.name;
         } else if (rowLine[0][0] == rowLine[1][1] || rowLine[0][0] == rowLine[2][2]) {
-            return activePlayer;
+            return activePlayer.name;
         } else if (rowLine[0][2] == rowLine[1][1] || rowLine[0][2] == rowLine[2][0]) {
-            return activePlayer;
+            return activePlayer.name;
         }
     }
+    let counter = 0;
 
     const playRound = (row, col) => {
+        if (winner) {
+            return;
+        }
 
         if (!board.getBoard()[row][col]) {
             console.log(`${activePlayer.name} marks ${row} ${col}`);
 
+            counter++;
+
             board.handleMove(row, col, activePlayer.token);
 
-            if (counter > 4 && checkWin()) {
-                let winner = checkWin();
-                //TBD winner is determined here
+            if (counter > 4 && checkWin(row, col)) {
+                winner = checkWin(row, col);
+                //The winner is decared here
+                console.log("The winner is: " + winner);
+                board = boardCreate();
+                return;
             }
 
             swtich();
@@ -84,10 +95,8 @@ function startGame() {
 
     }
 
-
     return { playRound, getBoard }
 }
 
-let a = startGame();
 
 
