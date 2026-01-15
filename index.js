@@ -67,7 +67,7 @@ function startGame() {
     let counter = 0;
 
     const playRound = (row, col) => {
-        if (winner) {
+        if (winner || row > 2 || col > 2) {
             return;
         }
 
@@ -95,8 +95,34 @@ function startGame() {
 
     }
 
-    return { playRound, getBoard }
+    return { playRound, getBoard, activePlayer }
 }
+
+function startBtn() {
+
+    let game = startGame();
+
+    let board = game.getBoard();
+
+    let cellList = document.querySelectorAll(".cell");
+
+    cellList.forEach(x => x.addEventListener("click", (event) => {
+        if (game.activePlayer.token == 1) {
+            x.classList.add("clickRed");
+        } else {
+            x.classList.add("clickBlue");
+        }
+
+        let id = event.target.id;
+        console.log(id);
+
+        game.playRound(id.slice(0, 1), id.slice(1));
+    }));
+
+
+}
+
+//UI controls
 
 
 
