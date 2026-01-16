@@ -54,13 +54,13 @@ function startGame() {
     const checkWin = (row, col) => {
         let rowLine = board.getBoard();
 
-        if (rowLine[row][0] == rowLine[row][1] || rowLine[row][0] == rowLine[row][2]) {
+        if (rowLine[row][0] == rowLine[row][1] && rowLine[row][0] == rowLine[row][2]) {
             return activePlayer.name;
-        } else if (rowLine[0][col] == rowLine[1][col] || rowLine[0][col] == rowLine[2][col]) {
+        } else if (rowLine[0][col] == rowLine[1][col] && rowLine[0][col] == rowLine[2][col]) {
             return activePlayer.name;
-        } else if (rowLine[0][0] == rowLine[1][1] || rowLine[0][0] == rowLine[2][2]) {
+        } else if (rowLine[0][0] == rowLine[1][1] && rowLine[0][0] == rowLine[2][2]) {
             return activePlayer.name;
-        } else if (rowLine[0][2] == rowLine[1][1] || rowLine[0][2] == rowLine[2][0]) {
+        } else if (rowLine[0][2] == rowLine[1][1] && rowLine[0][2] == rowLine[2][0]) {
             return activePlayer.name;
         }
     }
@@ -95,7 +95,9 @@ function startGame() {
 
     }
 
-    return { playRound, getBoard, activePlayer }
+    let getPlayer = () => activePlayer.token;
+
+    return { playRound, getBoard, getPlayer }
 }
 
 function startBtn() {
@@ -106,19 +108,26 @@ function startBtn() {
 
     let cellList = document.querySelectorAll(".cell");
 
-    cellList.forEach(x => x.addEventListener("click", (event) => {
-        if (game.activePlayer.token == 1) {
-            x.classList.add("clickRed");
-        } else {
-            x.classList.add("clickBlue");
-        }
+    cellList.forEach(x => x.addEventListener("click", clicked));
+
+    function clicked(event) {
+
+        let token = game.getPlayer();
+        console.log(token);
 
         let id = event.target.id;
-        console.log(id);
+
+        if (token == 1) {
+            event.target.classList.add("clickRed");
+        } else {
+            event.target.classList.add("clickBlue");
+        }
+
+
 
         game.playRound(id.slice(0, 1), id.slice(1));
-    }));
 
+    }
 
 }
 
