@@ -83,7 +83,7 @@ function startGame() {
                 //The winner is decared here
                 console.log("The winner is: " + winner);
                 board = boardCreate();
-                return;
+                return winner;
             }
 
             swtich();
@@ -95,20 +95,37 @@ function startGame() {
 
     }
 
+    let getWinner = () => winner;
+
     let getPlayer = () => activePlayer.token;
 
-    return { playRound, getBoard, getPlayer }
+    return { playRound, getBoard, getPlayer, getWinner }
 }
 
 function startBtn() {
 
     let game = startGame();
+    if (!game.getWinner == undefined) {
+        console.log("wahh");
+        return;
+    }
 
     let board = game.getBoard();
 
     let cellList = document.querySelectorAll(".cell");
+    cellList.forEach(x => x.style.borderColor = "white")
 
     cellList.forEach(x => x.addEventListener("click", clicked));
+
+    const btn = document.querySelector("button");
+
+    const resetGame = () => {
+        cellList.forEach(x => x.innerText = "");
+        cellList.forEach(x => x.removeEventListener("click", clicked));
+        btn.innerText = "Start a Game";
+        btn.onclick = startBtn;
+        return;
+    }
 
     function clicked(event) {
 
@@ -116,22 +133,34 @@ function startBtn() {
         console.log(token);
 
         let id = event.target.id;
+        event.target.removeEventListener("click", clicked);
 
         if (token == 1) {
-            event.target.classList.add("clickRed");
+            event.target.innerText = "X";
         } else {
-            event.target.classList.add("clickBlue");
+            event.target.innerText = "O";
         }
 
-
-
         game.playRound(id.slice(0, 1), id.slice(1));
+
+
+        if (game.getWinner()) {
+            btn.innerText = "Reset Game";
+            cellList.forEach(x => x.style.borderColor = "gray");
+
+
+
+            btn.onclick = resetGame;
+            cellList.forEach(x => x.removeEventListener("click", clicked));
+
+            console.log(game.getWinner());
+
+        }
 
     }
 
 }
 
-//UI controls
 
 
 

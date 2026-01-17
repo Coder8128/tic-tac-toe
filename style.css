@@ -3,22 +3,44 @@
     padding: 0;
 }
 
+body,
+html {
+    background-color: black;
+    width: 100%;
+    height: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .container {
     display: grid;
-    grid-template-rows: 100px 100px 100px;
+    grid-template-rows: 100px 100px 100px auto;
     grid-template-columns: 100px 100px 100px;
+    gap: 10px;
 }
 
 
 .cell {
-    border: solid black;
+    border: solid gray;
     box-sizing: border-box;
+
+    font-size: 5rem;
+    color: white;
+    text-align: center;
 }
 
-.clickRed {
-    background-color: red;
+.btnCell {
+    display: flex;
+    justify-content: center;
 }
 
-.clickBlue {
-    background-color: blue;
+
+button {
+    height: 3rem;
+    width: 7rem;
+    background-color: white;
+    border: solid black;
+    border-radius: 0.5rem;
 }
