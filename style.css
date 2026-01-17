@@ -23,7 +23,7 @@ html {
 
 
 .cell {
-    border: solid gray;
+    border: solid gray 3px;
     box-sizing: border-box;
 
     font-size: 5rem;

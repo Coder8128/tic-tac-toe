@@ -55,13 +55,29 @@ function startGame() {
         let rowLine = board.getBoard();
 
         if (rowLine[row][0] == rowLine[row][1] && rowLine[row][0] == rowLine[row][2]) {
-            return activePlayer.name;
+            return {
+                name: activePlayer.name,
+                line: "row",
+                inf: row
+            }
         } else if (rowLine[0][col] == rowLine[1][col] && rowLine[0][col] == rowLine[2][col]) {
-            return activePlayer.name;
+            return {
+                name: activePlayer.name,
+                line: "col",
+                inf: col
+            }
         } else if (rowLine[0][0] == rowLine[1][1] && rowLine[0][0] == rowLine[2][2]) {
-            return activePlayer.name;
+            return {
+                name: activePlayer.name,
+                line: "left",
+                inf: null
+            }
         } else if (rowLine[0][2] == rowLine[1][1] && rowLine[0][2] == rowLine[2][0]) {
-            return activePlayer.name;
+            return {
+                name: activePlayer.name,
+                line: "right",
+                inf: null
+            }
         }
     }
     let counter = 0;
@@ -81,7 +97,7 @@ function startGame() {
             if (counter > 4 && checkWin(row, col)) {
                 winner = checkWin(row, col);
                 //The winner is decared here
-                console.log("The winner is: " + winner);
+                console.log("The winner is: " + winner.name);
                 board = boardCreate();
                 return winner;
             }
@@ -105,21 +121,23 @@ function startGame() {
 function startBtn() {
 
     let game = startGame();
-    if (!game.getWinner == undefined) {
+    if (game.getWinner == undefined) {
         console.log("wahh");
         return;
     }
 
-    let board = game.getBoard();
+    let counter = 0;
 
     let cellList = document.querySelectorAll(".cell");
-    cellList.forEach(x => x.style.borderColor = "white")
+    cellList.forEach(x => x.style.borderColor = "white");
 
     cellList.forEach(x => x.addEventListener("click", clicked));
 
     const btn = document.querySelector("button");
+    btn.disabled = true;
 
     const resetGame = () => {
+        cellList.forEach(x => x.style.borderColor = "gray");
         cellList.forEach(x => x.innerText = "");
         cellList.forEach(x => x.removeEventListener("click", clicked));
         btn.innerText = "Start a Game";
@@ -130,7 +148,6 @@ function startBtn() {
     function clicked(event) {
 
         let token = game.getPlayer();
-        console.log(token);
 
         let id = event.target.id;
         event.target.removeEventListener("click", clicked);
@@ -141,19 +158,34 @@ function startBtn() {
             event.target.innerText = "O";
         }
 
+
+
         game.playRound(id.slice(0, 1), id.slice(1));
+        counter++;
 
-
-        if (game.getWinner()) {
+        if (game.getWinner() || counter > 8) {
+            btn.disabled = false;
             btn.innerText = "Reset Game";
             cellList.forEach(x => x.style.borderColor = "gray");
-
-
 
             btn.onclick = resetGame;
             cellList.forEach(x => x.removeEventListener("click", clicked));
 
-            console.log(game.getWinner());
+            let obj = game.getWinner();
+            if (obj.line == "row") {
+                let rowGlow = document.querySelectorAll(`div[id^="${obj.inf}"]`);
+                rowGlow.forEach(x => x.style.borderColor = "white");
+            } else if (obj.line == "col") {
+                let colGlow = document.querySelectorAll(`div[id$="${obj.inf}"]`);
+                colGlow.forEach(x => x.style.borderColor = "white");
+            } else if (obj.line == `left`) {
+                let colGlow = document.querySelectorAll(`div[id$="00"],div[id$="11"],div[id$="22"] `);
+                colGlow.forEach(x => x.style.borderColor = "white");
+            } else {
+                let colGlow = document.querySelectorAll(`div[id$="02"],div[id$="11"],div[id$="20"] `);
+                colGlow.forEach(x => x.style.borderColor = "white");
+            }
+
 
         }
 
